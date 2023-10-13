@@ -1,10 +1,12 @@
 using Local = SF.Mod33.ASP.NETcoreAuthentication;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddSingleton<Local.ILogger, Local.Logger>();
+builder.Services.AddSingleton(GetConfiguredMapper());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -24,3 +26,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+IMapper GetConfiguredMapper()
+{
+	var mapperConfig = new MapperConfiguration(v =>
+	{
+		v.AddProfile(new Local.MappingProfile());
+	});
+	return mapperConfig.CreateMapper();
+}

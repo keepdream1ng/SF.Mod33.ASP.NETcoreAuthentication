@@ -1,5 +1,6 @@
 ﻿using Local = SF.Mod33.ASP.NETcoreAuthentication;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace SF.Mod33.ASP.NETcoreAuthentication.Controllers;
 
@@ -8,13 +9,12 @@ namespace SF.Mod33.ASP.NETcoreAuthentication.Controllers;
 public class UserController : ControllerBase
 {
 	private readonly Local.ILogger _logger;
+	private readonly IMapper _mapper;
 
-	public UserController(Local.ILogger logger)
+	public UserController(Local.ILogger logger, IMapper mapper)
 	{
 		_logger = logger;
-		_logger.WriteError("test error");
-		_logger.WriteEvent("test event");
-		_logger.WriteError("test error2");
+		_mapper = mapper;
 	}
 
 	[HttpGet]
@@ -31,4 +31,22 @@ public class UserController : ControllerBase
 		};
 	}
 
+	[HttpGet]
+	[Route("viewmodel")]
+	public UserViewModel GetUserViewModel()
+	{
+		User user = new User()
+		{
+			Id = Guid.NewGuid(),
+			FirstName = "Иван",
+			LastName = "Иванов",
+			Email = "ivan@gmail.com",
+			Password = "11111122222qq",
+			Login = "ivanov"
+		};
+
+		UserViewModel userViewModel = _mapper.Map<UserViewModel>(user);
+
+		return userViewModel;
+	}
 }
