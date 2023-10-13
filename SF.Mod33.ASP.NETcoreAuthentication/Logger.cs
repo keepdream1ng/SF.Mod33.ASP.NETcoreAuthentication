@@ -2,34 +2,51 @@
 
 public class Logger : ILogger
 {
-	private string _eventFilePath;
-	private string _errorFilePath;
+	private ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+	private string _logDirectory;
+	public Logger()
+	{
+		_logDirectory = AppDomain.CurrentDomain.BaseDirectory + @"/_logs/" + DateTime.Now.ToString("dd-MM-yy HH-mm-ss") + @"/";
+
+		if (!Directory.Exists(_logDirectory))
+			Directory.CreateDirectory(_logDirectory);
+
+	}
 
 	public void WriteEvent(string eventMessage)
 	{
-		string logString = $"{DateTime.Now.ToString()}: {eventMessage}{Environment.NewLine}";
-		File.AppendAllTextAsync(_eventFilePath, logString);
+		string logString = $"{DateTime.Now.ToString()}: {eventMessage}";
 		Console.WriteLine(logString);
+		_lock.EnterWriteLock();
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_logDirectory + "events.txt", append: true))
+                {
+                    writer.WriteLine(logString);
+                }
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
+            }	
 	}
 
 	public void WriteError(string errorMessage)
 	{
-		string logString = $"{DateTime.Now.ToString()}: {errorMessage}{Environment.NewLine}";
-		File.AppendAllTextAsync(_errorFilePath, logString);
+		string logString = $"{DateTime.Now.ToString()}: {errorMessage}";
 		Console.WriteLine(logString);
+		_lock.EnterWriteLock();
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_logDirectory + "errors.txt", append: true))
+                {
+                    writer.WriteLine(logString);
+                }
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
+            }	
 	}
 
-	public Logger()
-	{
-		SetUp();
-	}
-
-	private void SetUp()
-	{
-	    string date = DateTime.Now.ToString("yyyyMMddHHmmss");	
-		string rootPath = AppDomain.CurrentDomain.BaseDirectory;
-		var logsFolder = Directory.CreateDirectory(Path.Combine(rootPath, $"{date}_Logs"));
-		_eventFilePath = Path.Combine(logsFolder.FullName, "events.txt");
-		_errorFilePath = Path.Combine(logsFolder.FullName, "errors.txt");
-	}
 }
