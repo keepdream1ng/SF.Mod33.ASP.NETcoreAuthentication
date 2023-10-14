@@ -6,6 +6,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddAuthentication(options => options.DefaultScheme = "Cookies")
+	.AddCookie("Cookies", options =>
+	{
+		options.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents
+		{
+			OnRedirectToLogin = redirectConext =>
+			{
+				redirectConext.HttpContext.Response.StatusCode = 401;
+				return Task.CompletedTask;
+			}
+		};
+	});
 builder.Services.AddDbContext<DAL.AppContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<BLL.ILogger, BLL.Logger>();
@@ -24,6 +36,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using System.Security.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SF.Mod33.ASP.NETcoreAuthentication.Controllers;
 
@@ -38,6 +42,7 @@ public class UserController : ControllerBase
 		};
 	}
 
+	[Authorize]
 	[HttpGet]
 	[Route("viewmodel")]
 	public UserViewModel GetUserViewModel()
@@ -58,7 +63,7 @@ public class UserController : ControllerBase
 	}
 	[HttpPost]
 	[Route("authenticate")]
-	public UserViewModel Authenticate(string login, string password)
+	public async Task<UserViewModel> Authenticate(string login, string password)
 	{
 		if (String.IsNullOrEmpty(login) ||
 		  String.IsNullOrEmpty(password))
@@ -70,6 +75,18 @@ public class UserController : ControllerBase
 
 		if (user.Password != password)
 			throw new AuthenticationException("Введенный пароль не корректен");
+
+		var claims = new List<Claim>
+		{
+			new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+		};
+
+		ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+			claims,
+			"AppCookie",
+			ClaimsIdentity.DefaultNameClaimType,
+			ClaimsIdentity.DefaultRoleClaimType);
+		await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
 		return _mapper.Map<UserViewModel>(user);
 	}
