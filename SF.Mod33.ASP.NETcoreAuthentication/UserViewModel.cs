@@ -15,6 +15,12 @@ namespace SF.Mod33.ASP.NETcoreAuthentication;
         FromRussia = GetFromRussiaValue(user.Email);
     }
 
+    public UserViewModel(UserEntity user)
+    {
+        Id = user.Id;
+        FullName = GetFullName(user.FirstName, user.LastName);
+        FromRussia = GetFromRussiaValue(user.Email);
+    }
 
     public string GetFullName(string firstName, string lastName)
     {

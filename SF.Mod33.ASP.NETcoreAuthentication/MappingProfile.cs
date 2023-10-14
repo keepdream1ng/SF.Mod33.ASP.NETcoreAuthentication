@@ -8,5 +8,7 @@ public class MappingProfile : Profile
 	{
 		CreateMap<User, UserViewModel>()
 			.ConstructUsing(v => new UserViewModel(v));
+		CreateMap<UserEntity, UserViewModel>()
+			.ConstructUsing(v => new UserViewModel(v));
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using BLL = SF.Mod33.ASP.NETcoreAuthentication.BLL;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using System.Security.Authentication;
 
 namespace SF.Mod33.ASP.NETcoreAuthentication.Controllers;
 
@@ -54,5 +55,22 @@ public class UserController : ControllerBase
 		UserViewModel userViewModel = _mapper.Map<UserViewModel>(user);
 
 		return userViewModel;
+	}
+	[HttpPost]
+	[Route("authenticate")]
+	public UserViewModel Authenticate(string login, string password)
+	{
+		if (String.IsNullOrEmpty(login) ||
+		  String.IsNullOrEmpty(password))
+			throw new ArgumentNullException("Запрос не корректен");
+
+		UserEntity user = _repository.GetByLogin(login);
+		if (user is null)
+			throw new AuthenticationException("Пользователь на найден");
+
+		if (user.Password != password)
+			throw new AuthenticationException("Введенный пароль не корректен");
+
+		return _mapper.Map<UserViewModel>(user);
 	}
 }
