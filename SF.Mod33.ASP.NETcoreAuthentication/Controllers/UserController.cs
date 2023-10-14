@@ -69,7 +69,7 @@ public class UserController : ControllerBase
 		  String.IsNullOrEmpty(password))
 			throw new ArgumentNullException("Запрос не корректен");
 
-		UserEntity user = _repository.GetByLogin(login);
+		User user = _repository.GetByLogin(login);
 		if (user is null)
 			throw new AuthenticationException("Пользователь на найден");
 

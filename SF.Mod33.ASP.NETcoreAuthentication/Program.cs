@@ -1,6 +1,7 @@
 using BLL = SF.Mod33.ASP.NETcoreAuthentication.BLL;
 using DAL = SF.Mod33.ASP.NETcoreAuthentication.DAL;
 using AutoMapper;
+using SF.Mod33.ASP.NETcoreAuthentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ builder.Services.AddAuthentication(options => options.DefaultScheme = "Cookies")
 		};
 	});
 builder.Services.AddDbContext<DAL.AppContext>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<repository.IUserRepository, repository.IUserRepository>();
 builder.Services.AddSingleton<BLL.ILogger, BLL.Logger>();
 builder.Services.AddSingleton(GetConfiguredMapper());
 builder.Services.AddControllers();
