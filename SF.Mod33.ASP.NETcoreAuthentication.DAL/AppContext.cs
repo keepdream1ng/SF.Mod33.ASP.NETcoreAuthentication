@@ -5,6 +5,7 @@ namespace SF.Mod33.ASP.NETcoreAuthentication.DAL;
 public class AppContext : DbContext
 {
 	public DbSet<UserEntity> Users { get; set; }
+	public DbSet<RoleEntity> UserRoles { get; set; }
 
 	public AppContext()
 	{
