@@ -1,11 +1,14 @@
-using Local = SF.Mod33.ASP.NETcoreAuthentication;
+using BLL = SF.Mod33.ASP.NETcoreAuthentication.BLL;
+using DAL = SF.Mod33.ASP.NETcoreAuthentication.DAL;
 using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddSingleton<Local.ILogger, Local.Logger>();
+builder.Services.AddDbContext<DAL.AppContext>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<BLL.ILogger, BLL.Logger>();
 builder.Services.AddSingleton(GetConfiguredMapper());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,7 +34,7 @@ IMapper GetConfiguredMapper()
 {
 	var mapperConfig = new MapperConfiguration(v =>
 	{
-		v.AddProfile(new Local.MappingProfile());
+		v.AddProfile(new MappingProfile());
 	});
 	return mapperConfig.CreateMapper();
 }

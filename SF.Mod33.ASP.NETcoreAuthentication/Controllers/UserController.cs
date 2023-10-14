@@ -1,4 +1,4 @@
-﻿using Local = SF.Mod33.ASP.NETcoreAuthentication;
+﻿using BLL = SF.Mod33.ASP.NETcoreAuthentication.BLL;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
@@ -8,12 +8,18 @@ namespace SF.Mod33.ASP.NETcoreAuthentication.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-	private readonly Local.ILogger _logger;
+	private readonly BLL.ILogger _logger;
+	private readonly IUserRepository _repository;
 	private readonly IMapper _mapper;
 
-	public UserController(Local.ILogger logger, IMapper mapper)
+	public UserController(
+		BLL.ILogger logger,
+		IUserRepository repository,
+		IMapper mapper
+		)
 	{
 		_logger = logger;
+		_repository = repository;
 		_mapper = mapper;
 	}
 

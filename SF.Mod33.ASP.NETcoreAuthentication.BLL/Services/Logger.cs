@@ -1,4 +1,4 @@
-﻿namespace SF.Mod33.ASP.NETcoreAuthentication;
+﻿namespace SF.Mod33.ASP.NETcoreAuthentication.BLL;
 
 public class Logger : ILogger
 {
