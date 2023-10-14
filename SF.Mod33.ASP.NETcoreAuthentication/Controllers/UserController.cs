@@ -28,6 +28,7 @@ public class UserController : ControllerBase
 		_mapper = mapper;
 	}
 
+	[Authorize]
 	[HttpGet]
 	public User GetUser()
 	{
@@ -42,7 +43,7 @@ public class UserController : ControllerBase
 		};
 	}
 
-	[Authorize]
+	[Authorize(Roles = "Администратор")]
 	[HttpGet]
 	[Route("viewmodel")]
 	public UserViewModel GetUserViewModel()
@@ -78,7 +79,8 @@ public class UserController : ControllerBase
 
 		var claims = new List<Claim>
 		{
-			new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+			new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+			new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
 		};
 
 		ClaimsIdentity claimsIdentity = new ClaimsIdentity(
