@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SF.Mod33.ASP.NETcoreAuthentication.Controllers;
 
+[ExceptionHandler]
 [ApiController]
 [Route("[controller]")]
 public class UserController : ControllerBase
