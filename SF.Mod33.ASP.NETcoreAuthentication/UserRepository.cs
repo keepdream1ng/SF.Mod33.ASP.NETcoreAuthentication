@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SF.Mod33.ASP.NETcoreAuthentication;
+/// <summary>
+/// Temporary repository to test PLL and BLL.
+/// </summary>
 public class UserRepository : IUserRepository
 {
 	private readonly List<User> _users = new List<User>();

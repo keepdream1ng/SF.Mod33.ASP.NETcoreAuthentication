@@ -19,7 +19,7 @@ builder.Services.AddAuthentication(options => options.DefaultScheme = "Cookies")
 			}
 		};
 	});
-builder.Services.AddDbContext<DAL.AppContext>();
+//builder.Services.AddDbContext<DAL.AppContext>();
 builder.Services.AddScoped<repository.IUserRepository, repository.UserRepository>();
 builder.Services.AddSingleton<BLL.ILogger, BLL.Logger>();
 builder.Services.AddSingleton(GetConfiguredMapper());
@@ -39,6 +39,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware();
 
 app.MapControllers();
 
